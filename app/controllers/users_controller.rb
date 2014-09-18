@@ -68,7 +68,8 @@ class UsersController < ApplicationController
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
+    # permit for mass assignment security breach... NOT a concern for simple app
     def user_params
-      params.require(:user).permit(:name, :email)
+      params.require(:user).permit()
     end
 end

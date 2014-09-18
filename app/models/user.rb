@@ -1,6 +1,8 @@
 class User < ActiveRecord::Base
 	has_many :micro_posts
 
+	attr_accessor :password
+
 	validates :name, presence: true, 
 		length: { minimum:4, maximum:50 }
 
@@ -8,5 +10,33 @@ class User < ActiveRecord::Base
 	validates :email, presence: true, 
 		format: { with: VALID_EMAIL_REGEX },
 		uniqueness: { case_sensitive: false }
+
+	validates :password, presence: true, if: "hashed_password.blank?"
+
+	before_save :encrypt_password
+
+	def encrypt_password
+		self.salt ||= Digest::SHA256.hexdigest("--#{Time.now.to_s}--#{email}--")
+		self.hashed_password = encrypt(password)
+		
+	end
+
+	def encrypt(raw_password)
+		Digest::SHA256.hexdigest("--#{salt}--#{raw_password}--")
+		
+	end
+
+	def password_is?(raw_password)
+		self.hashed_password == encrypt(raw_password)
+		
+	end
+
+	# If there is a user in the database with the given email, and 
+	# the password matches theirs, returns the user.
+	# Otherwise, returns nil
+	def self.authenticate(auth_email, auth_password)
+		user = User.find_by_email(auth_email)
+		(user && user.password_is?(auth_password)) ? user : nil
+	end
 
 end

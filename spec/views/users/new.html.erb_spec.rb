@@ -4,7 +4,8 @@ RSpec.describe "users/new", :type => :view do
   before(:each) do
     assign(:user, User.new(
       :name => "MyString",
-      :email => "My@String.com"
+      :email => "My@String.com",
+      :password => "mystrings"
     ))
   end
 

@@ -3,7 +3,7 @@ require 'rails_helper'
 describe "GET /users/id" do
 
 	before do
-		@user = User.create! name: "Matt", email: "goggin13@gmail.com"
+		@user = User.create! name: "Matt", email: "goggin13@gmail.com", password: "igotmypass"
 		3.times { |i| @user.micro_posts.create! content: "hello world - #{i}" }
 	end
 
