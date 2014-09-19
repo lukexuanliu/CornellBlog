@@ -1,4 +1,6 @@
 class SessionsController < ApplicationController
+	before_filter :redirect_home_if_signed_in, only: [:new, :create]
+	
 	def new
 		
 	end

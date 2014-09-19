@@ -1,4 +1,7 @@
 class UsersController < ApplicationController
+  before_filter :redirect_home_if_signed_in, only: [:new, :create]
+  before_filter :redirect_unless_authorized, only: [:edit, :update, :destroy]
+
   before_action :set_user, only: [:show, :edit, :update, :destroy]
 
   # GET /users
@@ -60,7 +63,6 @@ class UsersController < ApplicationController
       format.json { head :no_content }
     end
   end
-
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_user
@@ -72,4 +74,14 @@ class UsersController < ApplicationController
     def user_params
       params.require(:user).permit(:name, :email, :password)
     end
-end
+
+    def redirect_unless_authorized
+      @user = User.find(params[:id])
+      unless signed_in? && current_user == @user
+        flash[:error] = "You are not authorized to edit that user"
+        redirect_to root_path
+      end
+    end
+
+  
+  end
