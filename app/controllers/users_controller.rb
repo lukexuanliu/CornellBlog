@@ -63,25 +63,26 @@ class UsersController < ApplicationController
       format.json { head :no_content }
     end
   end
+
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_user
-      @user = User.find(params[:id])
-    end
-
-    # Never trust parameters from the scary internet, only allow the white list through.
-    # permit for mass assignment security breach... NOT a concern for simple app
-    def user_params
-      params.require(:user).permit(:name, :email, :password)
-    end
-
-    def redirect_unless_authorized
-      @user = User.find(params[:id])
-      unless signed_in? && current_user == @user
-        flash[:error] = "You are not authorized to edit that user"
-        redirect_to root_path
-      end
-    end
-
-  
+  # Use callbacks to share common setup or constraints between actions.
+  def set_user
+    @user = User.find(params[:id])
   end
+
+  # Never trust parameters from the scary internet, only allow the white list through.
+  # permit for mass assignment security breach... NOT a concern for simple app
+  def user_params
+    params.require(:user).permit(:name, :email, :password)
+  end
+
+  def redirect_unless_authorized
+    #@user = User.find(params[:id])
+    unless signed_in? && current_user == @user
+      flash[:error] = "You are not authorized to edit that user"
+      redirect_to root_path
+    end
+  end
+
+
+end
