@@ -1,5 +1,6 @@
 class MicroPostsController < ApplicationController
   before_action :set_micro_post, only: [:show, :edit, :update, :destroy]
+  before_filter :redirect_unless_authorized, only: [:edit, :update, :destroy]
 
   # GET /micro_posts
   # GET /micro_posts.json
@@ -24,7 +25,7 @@ class MicroPostsController < ApplicationController
   # POST /micro_posts
   # POST /micro_posts.json
   def create
-    @micro_post = MicroPost.new(micro_post_params)
+    #@micro_post = MicroPost.new(micro_post_params)
 
     respond_to do |format|
       if @micro_post.save
@@ -62,13 +63,21 @@ class MicroPostsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_micro_post
-      @micro_post = MicroPost.find(params[:id])
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_micro_post
+    @micro_post = MicroPost.find(params[:id])
+  end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def micro_post_params
-      params.require(:micro_post).permit(:user_id, :content)
-    end
+  # Never trust parameters from the scary internet, only allow the white list through.
+  def micro_post_params
+    params.require(:micro_post).permit(:user_id, :content)
+  end
+end
+
+def redirect_unless_authorized
+  #@user = User.find(params[:id])
+  unless signed_in? && current_user == @micro_post.user
+    flash[:error] = "You are not authorized to edit that MicroPost"
+    redirect_to root_path
+  end
 end

@@ -4,18 +4,21 @@ source 'https://rubygems.org'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.1.5'
 gem 'bootstrap-sass', '3.2.0.2'
+gem 'faker'
+gem 'will_paginate'
+gem 'bootstrap-will_paginate'
 gem 'autoprefixer-rails'
 #gem 'ruby', '2.0.0p451'
 # Use sqlite3 as the database for Active Record
 group :development, :test do
-  gem 'sqlite3'
-  gem 'rspec-rails'
-  gem 'capybara'
+	gem 'sqlite3'
+	gem 'rspec-rails'
+	gem 'capybara'
 end
 
 group :production do
-  gem 'pg'
-#  gem 'rails_12factor'
+	gem 'pg'
+	#  gem 'rails_12factor'
 end
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 4.0.3'
@@ -49,4 +52,3 @@ gem 'spring',        group: :development
 
 # Use debugger
 # gem 'debugger', group: [:development, :test]
-
