@@ -1,16 +1,16 @@
 require 'rails_helper'
 
 describe "lecture 6" do
-  
+
   before do
     @user = User.create! name: "Matt", email: "goggin13@gmail.com", password: "foobar"
   end
-    
+
   def user_login(user)
     visit new_session_path
     fill_in "Email", with: @user.email
     fill_in "Password", with: @user.password
-    click_button "Login" 
+    click_button "Login"
   end
 
   def should_be_on_home_page
@@ -39,7 +39,7 @@ describe "lecture 6" do
       end
 
       it "should show you the login form" do
-        expect(page).to have_selector('h1', text: 'Login')  
+        expect(page).to have_selector('h1', text: 'Login')
       end
     end
 
@@ -52,7 +52,7 @@ describe "lecture 6" do
 
       it "should show you the home page" do
         expect(page).to_not have_selector('h1', text: 'Login')
-        should_be_on_home_page 
+        should_be_on_home_page
       end
     end
   end
@@ -66,7 +66,7 @@ describe "lecture 6" do
       end
 
       it "should show you the registration form" do
-        expect(page).to have_selector('h1', text: 'New user')  
+        expect(page).to have_selector('h1', text: 'New user')
       end
     end
 
@@ -79,20 +79,20 @@ describe "lecture 6" do
 
       it "should show you the home page" do
         expect(page).to_not have_selector('h1', text: 'New user')
-        should_be_on_home_page 
+        should_be_on_home_page
       end
     end
-  end  
+  end
 
   describe "user access control" do
-    
+
     describe "an unauthenticated user" do
-      
+
       it "should not be able to edit a user" do
         visit edit_user_path(@user)
         should_be_on_home_page_with_error "You are not authorized to edit that user"
       end
-      
+
       it "should not be able to destroy a user" do
         visit users_path
         expect {
@@ -105,7 +105,7 @@ describe "lecture 6" do
     describe "an authenticated user" do
 
       before { user_login @user }
-      
+
       it "should be able to edit a user" do
         visit edit_user_path(@user)
         expect(page).to have_selector('h1', text: 'Editing user')
@@ -113,29 +113,29 @@ describe "lecture 6" do
         click_button 'Update User'
         should_have_notice 'User was successfully updated.'
       end
-      
+
       it "should be able to destroy a user" do
         visit users_path
         expect {
           click_link "Destroy"
         }.to change(User, :count).by(-1)
       end
-    end    
+    end
   end
 
   describe "micropost access control" do
-    
+
     before do
-      @my_micro_post = @user.micro_posts.create! content: "hello world" 
+      @my_micro_post = @user.micro_posts.create! content: "hello world"
     end
 
     describe "an unauthenticated user" do
-      
+
       it "should not be able to edit a micropost" do
         visit edit_micro_post_path(@my_micro_post)
         should_be_on_home_page_with_error "You are not authorized to edit that MicroPost"
       end
-      
+
       it "should not be able to destroy a micropost" do
         visit micro_posts_path
         click_link 'Destroy'
@@ -145,14 +145,14 @@ describe "lecture 6" do
 
     describe "an authenticated user" do
 
-      before do 
-        other_user = User.create! email: "example-2@example.com", 
-                                 name: "example", 
-                                 password: "password"
-        @their_micro_post = other_user.micro_posts.create! content: "hello world" 
-        user_login @user 
+      before do
+        other_user = User.create! email: "example-2@example.com",
+          name: "example",
+          password: "password"
+        @their_micro_post = other_user.micro_posts.create! content: "hello world"
+        user_login @user
       end
-      
+
       it "should be able to edit their own micropost " do
         visit edit_micro_post_path(@my_micro_post)
         expect(page).to have_selector('h1', text: 'Editing micro_post')
@@ -164,27 +164,27 @@ describe "lecture 6" do
       it "should not be able to edit someone else's  micropost " do
         visit edit_micro_post_path(@their_micro_post)
         should_be_on_home_page_with_error "You are not authorized to edit that MicroPost"
-      end      
-      
+      end
+
       it "should be able to destroy their own micro_posts " do
-        visit micro_posts_path 
+        visit micro_posts_path
         expect {
           find("a[href='#{micro_post_path(@my_micro_post)}'][data-method='delete']").click
         }.to change(MicroPost, :count).by(-1)
       end
 
       it "should not be able to destroy someone else's micro_posts " do
-        visit micro_posts_path 
+        visit micro_posts_path
         expect {
           find("a[href='#{micro_post_path(@their_micro_post)}'][data-method='delete']").click
         }.to change(MicroPost, :count).by(0)
         should_be_on_home_page_with_error "You are not authorized to edit that MicroPost"
       end
-    end    
-  end  
+    end
+  end
 
   describe "users link" do
-    
+
     before { visit root_path }
 
     it "should appear in the header" do
@@ -193,12 +193,12 @@ describe "lecture 6" do
   end
 
   describe "paginating users" do
-    
+
     before do
       @users = (0..60).map do |i|
         User.create name: "user-#{i}",
-                    email: "user-#{i}@example.com",
-                    password: "foobar"
+          email: "user-#{i}@example.com",
+          password: "foobar"
       end
       @users << @user
     end
@@ -208,25 +208,25 @@ describe "lecture 6" do
       @users[0..28].each do |user|
         expect(page).to have_content user.name
       end
-    expect(page).to_not have_content @users[29].name
+      expect(page).to_not have_content @users[29].name
     end
-    
+
     it "should display the second 30 users on page 2" do
       visit users_path(page: 2)
       @users[29..48].each do |user|
         expect(page).to have_content user.name
       end
-	  expect(page).to_not have_content @users[0].name
+      expect(page).to_not have_content @users[0].name
     end
 
     it "should have a link to the next page" do
       visit users_path
-	  expect(page).to have_css("a[href='#{users_path(page:2)}']")
+      expect(page).to have_css("a[href='#{users_path(page:2)}']")
     end
   end
 
   describe "paginating micro_posts" do
-    
+
     before do
       @micro_posts = (0..20).map do |i|
         @user.micro_posts.create! content: "hello world, #{i}"
@@ -238,20 +238,20 @@ describe "lecture 6" do
       @micro_posts[0..9].each do |post|
         expect(page).to have_content post.content
       end
-	  expect(page).to_not have_content @micro_posts[10].content
+      expect(page).to_not have_content @micro_posts[10].content
     end
-    
+
     it "should display the second 30 users on page 2" do
       visit user_path(@user, page: 2)
       @micro_posts[10..19].each do |post|
         expect(page).to have_content post.content
       end
-	  expect(page).to_not have_content @micro_posts[0].content
+      expect(page).to_not have_content @micro_posts[0].content
     end
 
     it "should have a link to the next page" do
       visit user_path(@user)
-	  expect(page).to have_css("a[href='#{user_path(@user, page:2)}']")
+      expect(page).to have_css("a[href='#{user_path(@user, page:2)}']")
     end
   end
 
@@ -271,7 +271,7 @@ describe "lecture 6" do
       user_login @user
       visit edit_user_path(@user)
       expect(page).to have_css('input[name="user[avatar]"][type="file"]')
-    end 
+    end
 
     it "should display a medium sized image on the user profile" do
       visit user_path(@user)

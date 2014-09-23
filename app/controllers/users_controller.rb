@@ -1,8 +1,9 @@
 class UsersController < ApplicationController
+  before_action :set_user, only: [:show, :edit, :update, :destroy]
+
   before_filter :redirect_home_if_signed_in, only: [:new, :create]
   before_filter :redirect_unless_authorized, only: [:edit, :update, :destroy]
 
-  before_action :set_user, only: [:show, :edit, :update, :destroy]
 
   # GET /users
   # GET /users.json
