@@ -14,6 +14,7 @@ class UsersController < ApplicationController
   # GET /users/1
   # GET /users/1.json
   def show
+    @micro_posts = @user.micro_posts.paginate(page: params[:page], per_page: 10)
   end
 
   # GET /users/new
