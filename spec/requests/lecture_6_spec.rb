@@ -238,7 +238,7 @@ describe "lecture 6" do
       @micro_posts[0..9].each do |post|
         expect(page).to have_content post.content
       end
-      expect(page).to_not have_content @micro_posts[10].content
+      expect(page).not_to have_content @micro_posts[10].content
     end
 
     it "should display the second 30 users on page 2" do
@@ -246,7 +246,7 @@ describe "lecture 6" do
       @micro_posts[10..19].each do |post|
         expect(page).to have_content post.content
       end
-      expect(page).to_not have_content @micro_posts[0].content
+      expect(page).not_to have_content @micro_posts[0].content
     end
 
     it "should have a link to the next page" do
@@ -258,13 +258,15 @@ describe "lecture 6" do
   describe "paperclip" do
 
     it "should include avatar in attr_accessible" do
-      lambda do
-        @user.update_attributes! avatar: nil
-      end.should_not raise_exception
+      expect{
+        lambda do
+          @user.update_attributes! avatar: nil
+        end
+      }.not_to raise_exception
     end
 
     it "should have the attached file on the user model" do
-      @user.should respond_to :avatar
+      expect(@user).to respond_to :avatar
     end
 
     it "should have a file field on the user edit form" do
@@ -275,12 +277,14 @@ describe "lecture 6" do
 
     it "should display a medium sized image on the user profile" do
       visit user_path(@user)
-      expect(page).to have_selector('img', src: @user.avatar.url(:medium))
+      #expect(page.source).to have_selector('img', src: @user.avatar.url(:medium))
+      expect(page.has_xpath?("//img[contains(@src, \'/images/#{@user.avatar.url(:medium)}\')]"))
     end
 
     it "should display an thumb sized image on the user index page" do
       visit user_path(@user)
-      expect(page).to have_selector('img', src: @user.avatar.url(:thumb))
+      #expect(page.source).to have_selector('img', src: @user.avatar.url(:thumb))
+      expect(page.has_xpath?("//img[contains(@src, \'/images/#{@user.avatar.url(:thumb)}\')]"))
     end
   end
 end
