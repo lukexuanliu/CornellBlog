@@ -56,4 +56,21 @@ class User < ActiveRecord::Base
 		
 	end
 
+	# Returns the Relationship object this user has with other_user
+	# or nil if no relationship exists
+	def following?(other_user)
+		relationships.find_by_followed_id(other_user.id)
+	end
+
+	# create a Relationship object where this user is following other_user
+	def follow!(other_user)
+		self.relationships.create! followed_id: other_user.id, follower_id: self.id
+	end
+
+	# destroy the Relationship object where this user is following other_user
+	def unfollow!(other_user)
+		self.relationships.find_by_followed_id(other_user.id).destroy
+	end
+
+
 end
