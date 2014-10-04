@@ -33,9 +33,11 @@ class MicroPostsController < ApplicationController
       if @micro_post.save
         format.html { redirect_to @micro_post, notice: 'Micro post was successfully created.' }
         format.json { render :show, status: :created, location: @micro_post }
+        format.js {render :partial => "micro_posts/show"}
       else
         format.html { render :new }
         format.json { render json: @micro_post.errors, status: :unprocessable_entity }
+        format.js {render :partial => "micro_posts/errors"}
       end
     end
   end
