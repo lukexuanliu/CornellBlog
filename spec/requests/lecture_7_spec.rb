@@ -74,7 +74,8 @@ describe "lecture 7" do
       
       it "should have a link to the next page" do
         visit root_path
-        expect(page).to have_css("a[href='#{static_pages_home_path(page:2)}']")
+        #expect(page).to have_css("a[href='#{static_pages_home_path(page:2)}']")
+        expect(page).to have_css("a[href='#{root_path(page:2)}']")
       end
     end
   end
