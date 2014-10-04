@@ -25,7 +25,9 @@ class MicroPostsController < ApplicationController
   # POST /micro_posts
   # POST /micro_posts.json
   def create
-    #@micro_post = MicroPost.new(micro_post_params)
+    @micro_post = MicroPost.new(micro_post_params)
+    @micro_post.user = current_user
+
 
     respond_to do |format|
       if @micro_post.save
