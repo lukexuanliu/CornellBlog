@@ -31,7 +31,7 @@ describe "lecture 7" do
       end
 
       it "should not display the follow form" do
-        expect(has_follow_button?).to be_false
+        expect(has_follow_button?).to eq(false)
       end
     end
 
@@ -45,13 +45,13 @@ describe "lecture 7" do
 
         it "should display the follow form on another user's profile" do
           visit user_path(@friend)
-          has_follow_button?.should be_true
+          has_follow_button?.should eq(true)
         end
 
         it "should allow them to follow the user" do
           visit user_path(@friend)
           click_button 'Follow'
-          @user.following?(@friend).should be_true
+          @user.following?(@friend).should_not be_nil
         end
 
         describe "that they are already following" do
@@ -62,13 +62,13 @@ describe "lecture 7" do
           end
 
           it "should display the unfollow form if the user is already following them" do
-            has_unfollow_button?.should be_true
+            has_unfollow_button?.should eq(true)
           end
 
           it "should allow them to unfollow the user" do
             visit user_path(@friend)
             click_button 'Unfollow'
-            @user.following?(@friend).should be_false
+            expect(@user.following?(@friend)).to be_nil 
           end
         end
       end
@@ -80,7 +80,7 @@ describe "lecture 7" do
         end
 
         it "should not display the follow form on your own profile" do
-          has_follow_button?.should be_false
+          has_follow_button?.should eq(false)
         end
       end
     end
