@@ -47,4 +47,9 @@ class User < ActiveRecord::Base
 		(user && user.password_is?(auth_password)) ? user : nil
 	end
 
+	def feed(paginate_options={page: 1})
+		micro_posts.paginate(paginate_options)
+		
+	end
+
 end
