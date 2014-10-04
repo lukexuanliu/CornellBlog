@@ -1,15 +1,19 @@
 class User < ActiveRecord::Base
 	has_many :micro_posts
+	has_many :relationships, foreign_key: "follower_id", dependent: :destroy
+	has_many :followed_users, through: :relationships, source: :followed
 
 	attr_accessor :password
 
 	has_attached_file :avatar,
-	:style => {
-		:medium => "300x300>",
-		:thumb => "100x100>"
-	},
-		:default_url => "/images/:style/missing.png"
-	validates_attachment_file_name :avatar, :matches => [/png\Z/, /jpe?g\Z/, /gif\Z/]
+					:style => {
+						:medium => "300x300>",
+						:thumb => "100x100>"
+					},
+					:default_url => "/images/:style/missing.png"
+
+	validates_attachment_file_name :avatar, 
+								:matches => [/png\Z/, /jpe?g\Z/, /gif\Z/]
 
 	validates :name, presence: true,
 		length: { minimum:4, maximum:50 }
