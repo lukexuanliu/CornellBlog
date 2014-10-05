@@ -53,20 +53,21 @@ describe "lecture 7" do
       
       it "should display the first 30 posts by default" do
         visit root_path
-        (0..29).each do |i|
+
+        (49..30).each do |i|
           expect(page).to have_content "hello, world #{i}!"
         end
-        (30..49).each do |i|
+        (29..0).each do |i|
           expect(page).not_to have_content "hello, world #{i}!"
         end
       end
 
       it "should display the second page if requested" do
         visit root_path(page: 2)
-        (0..29).each do |i|
+        (49..30).each do |i|
           expect(page).not_to have_content "hello, world #{i}!"
         end
-        (30..49).each do |i|
+        (29..0).each do |i|
           expect(page).to have_content "hello, world #{i}!"
         end
       end

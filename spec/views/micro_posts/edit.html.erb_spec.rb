@@ -11,6 +11,8 @@ RSpec.describe "micro_posts/edit", :type => :view do
   it "renders the edit micro_post form" do
     render
 
+    print page.source
+
     assert_select "form[action=?][method=?]", micro_post_path(@micro_post), "post" do
 
       assert_select "input#micro_post_user_id[name=?]", "micro_post[user_id]"

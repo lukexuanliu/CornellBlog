@@ -4,12 +4,15 @@
 
 <p>
 	<%= image_tag @user.avatar.url(:medium) %>
-	
+	<br>
+
 	<strong>Name:</strong>
 	<%= @user.name %>
+	<br>
 
 	<strong>Email:</strong>
 	<%= @user.email %>
+	<br>
 
 	<% if signed_in? %>
 		<%= render 'follow_form' %>
@@ -20,11 +23,13 @@
 	<%= pluralize(@user.micro_posts.length, 'MicroPost') %>
 </p>
 
-<%= will_paginate @micro_posts %>
+<p>
+	<%= will_paginate @micro_posts %>
 
-<%= render @micro_posts %>
+	<%= render @micro_posts %>
 
-<%= will_paginate @micro_posts %>
+	<%= will_paginate @micro_posts %>
+</p>
 
 <%= link_to 'Edit', edit_user_path(@user) %> |
 <%= link_to 'Back', users_path %>

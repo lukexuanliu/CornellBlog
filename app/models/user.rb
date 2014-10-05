@@ -52,8 +52,10 @@ class User < ActiveRecord::Base
 	end
 
 	def feed(paginate_options={page: 1})
-		micro_posts.paginate(paginate_options)
-		
+	    followed_user_ids = followed_users.map { |u| u.id }
+	    MicroPost.where('user_id = ? or user_id in (?)', id, followed_user_ids)
+	             .order('created_at DESC')
+	             .paginate(paginate_options)
 	end
 
 	# Returns the Relationship object this user has with other_user
@@ -70,6 +72,17 @@ class User < ActiveRecord::Base
 	# destroy the Relationship object where this user is following other_user
 	def unfollow!(other_user)
 		self.relationships.find_by_followed_id(other_user.id).destroy
+	end
+
+	# return count of the followers
+	def count_follower
+		#relationships.count - count_followed
+
+	end
+
+	# return how many self is following
+	def count_followed
+		#relationships.where(follower_id: self.id).count
 	end
 
 
